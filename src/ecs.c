@@ -3,16 +3,25 @@
 #include "raymath.h"
 #include <stdio.h>
 
-int PLAYER_COUNT;
+unsigned int ENTITIES;
+
+void components_init(struct ComponentList* components)
+{
+    components->total_plr_ctrl_systems = 0;
+    components->total_hp_systems = 0;
+    components->total_movement_systems = 0;
+    components->total_pos_systems = 0;
+    components->total_draw_systems = 0;
+}
 
 void player_create(struct ComponentList* components)
 {
-    if (PLAYER_COUNT == max_entity_count) {
+    if (ENTITIES == max_entity_count) {
         printf("Entity limit reached \n");
         return;
     }
-    int id = PLAYER_COUNT++;
-
+    int id = ENTITIES++;
+    
     components->player_control_systems[id].entity_id = id;
     components->total_plr_ctrl_systems++;
 
@@ -20,19 +29,19 @@ void player_create(struct ComponentList* components)
     components->total_hp_systems++;
 
     components->position_systems[id].entity_id = id;
-    components->position_systems[id].pos.y = id * 32;
+    components->position_systems[id].pos = (Vector2) {64, 64};
     components->total_pos_systems++;
 
     components->movement_systems[id].entity_id = id;
     components->movement_systems[id].accel = 75;
     components->movement_systems[id].decel = 0.99;
+    components->movement_systems[id].dist_max = 175.0f;
     components->total_movement_systems++;
 
     components->draw_systems[id].entity_id = id;
     components->draw_systems[id].color = RED;
     components->draw_systems[id].size = 15.0f;
     components->total_draw_systems++;
-
 }
 
 void update_player_control_system(struct ComponentList* components, struct PlayerController* component)
@@ -52,6 +61,10 @@ void update_player_control_system(struct ComponentList* components, struct Playe
 void update_movement_system(struct ComponentList* components, struct Movement* component)
 {
     component->vel = Vector2Scale(component->vel, GetFrameTime());
+
+    component->dist_used += Vector2Length(component->vel);
+    if (component->dist_used >= component->dist_max) return;
+
     components->position_systems[component->entity_id].pos = Vector2Add(components->position_systems[component->entity_id].pos, component->vel);
 
     component->vel = Vector2Scale(component->vel, component->decel * GetFrameTime());

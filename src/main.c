@@ -11,7 +11,7 @@ int main()
     InitWindow(screenWidth, screenHeight, "raylib");
 
     struct ComponentList components;
-
+    components_init(&components);
     //for (int i=0; i<26; i++) player_create(&components);
 
     player_create(&components);

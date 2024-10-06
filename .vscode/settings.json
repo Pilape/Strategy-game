@@ -11,6 +11,7 @@
 	"files.associations": {
 		"stdio.h": "c",
 		"player.h": "c",
-		"ecs.h": "c"
+		"ecs.h": "c",
+		"raymath.h": "c"
 	}
 }
