@@ -12,6 +12,7 @@
 		"stdio.h": "c",
 		"player.h": "c",
 		"ecs.h": "c",
-		"raymath.h": "c"
+		"raymath.h": "c",
+		"*.m": "c"
 	}
 }

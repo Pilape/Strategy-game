@@ -15,6 +15,7 @@ int main()
     //for (int i=0; i<26; i++) player_create(&components);
 
     player_create(&components);
+    obstacle_create(&components, (Vector2) {175, 50});
     //--------------------------------------------------------------------------------------
 
     // Main game loop
@@ -22,11 +23,17 @@ int main()
     {
         // Update
         //----------------------------------------------------------------------------------
-        for (int i=0; i<components.total_plr_ctrl_systems; i++) {
+        for (int i=1; i<=components.total_plr_ctrl_systems; i++)
+        {
             update_player_control_system(&components, &components.player_control_systems[i]);
         }
 
-        for (int i=0; i<components.total_movement_systems; i++)
+        for (int i=1; i<=components.total_collision_systems; i++)
+        {
+            update_collision_system(&components, &components.collision_systems[i]);
+        }
+
+        for (int i=1; i<=components.total_movement_systems; i++)
         {
             update_movement_system(&components, &components.movement_systems[i]);
         }
@@ -40,7 +47,7 @@ int main()
 
             DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
 
-            for (int i=0; i<components.total_draw_systems; i++)
+            for (int i=1; i<=components.total_draw_systems; i++)
             {
                 draw_circle_system(components, &components.draw_systems[i]);
             }
