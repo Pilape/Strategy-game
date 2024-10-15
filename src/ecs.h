@@ -40,6 +40,7 @@ struct PlayerController {
 struct Collision {
     unsigned int entity_id;
     float size;
+    Vector2 *pos;
 };
 
 /////////////////
@@ -47,6 +48,10 @@ struct Collision {
 #define max_entity_count 100
 
 struct ComponentList {
+    
+    struct Collision collision_systems[max_entity_count];
+    unsigned int total_collision_systems;
+
     struct Position position_systems[max_entity_count];
     unsigned int total_pos_systems;
 
@@ -61,9 +66,6 @@ struct ComponentList {
 
     struct PlayerController player_control_systems[max_entity_count];
     unsigned int total_plr_ctrl_systems;
-
-    struct Collision collision_systems[max_entity_count];
-    unsigned int total_collision_systems;
 };
 
 void components_init(struct ComponentList* components);

@@ -13,6 +13,10 @@
 		"player.h": "c",
 		"ecs.h": "c",
 		"raymath.h": "c",
-		"*.m": "c"
+		"*.m": "c",
+		"array": "c",
+		"string_view": "c",
+		"initializer_list": "c",
+		"random": "c"
 	}
 }
