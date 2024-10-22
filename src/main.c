@@ -1,67 +1,39 @@
 #include "raylib.h"
-#include "ecs.h"
+#include "raymath.h"
 
-int main() 
+#include "tilemap.h"
+#include "player.h"
+
+Camera2D mainCamera = { 0 };
+
+int main()
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const Vector2 SCREEN_SIZE = {800, 450};
+    InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "AAAAA game");
 
-    InitWindow(screenWidth, screenHeight, "raylib");
+    TexturesInit();
+    PlayerInit();
+    mainCamera.target = TileToScreenPos(player.tilePos);
+    mainCamera.offset = Vector2Scale(SCREEN_SIZE, 0.5f);
+    mainCamera.rotation = 0.0f;
+    mainCamera.zoom = 1.0f;
 
-    struct ComponentList components;
-    components_init(&components);
-    //for (int i=0; i<26; i++) player_create(&components);
-
-    player_create(&components);
-    obstacle_create(&components, (Vector2) {175, 50});
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        for (int i=1; i<=components.total_plr_ctrl_systems; i++)
-        {
-            update_player_control_system(&components, &components.player_control_systems[i]);
-        }
+        PlayerUpdate();
+        mainCamera.target = Vector2Lerp(mainCamera.target, TileToScreenPos(player.tilePos), 5.0f * GetFrameTime());
 
-        for (int i=1; i<=components.total_collision_systems; i++)
-        {
-            update_collision_system(&components, &components.collision_systems[i]);
-        }
-
-        for (int i=1; i<=components.total_movement_systems; i++)
-        {
-            update_movement_system(&components, &components.movement_systems[i]);
-        }
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
+            ClearBackground(DARKGRAY);
 
-            ClearBackground(RAYWHITE);
+            BeginMode2D(mainCamera);
+                DrawTiles();
+                PlayerDraw();
+            EndMode2D();
 
-            DrawText("This is a raylib example", 10, 40, 20, DARKGRAY);
-
-            for (int i=1; i<=components.total_draw_systems; i++)
-            {
-                draw_circle_system(components, &components.draw_systems[i]);
-            }
-
-            DrawFPS(10, 10);
-
+            DrawFPS(15, 15);
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 
     return 0;
 }

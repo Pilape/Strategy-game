@@ -37,10 +37,21 @@ struct PlayerController {
     unsigned int entity_id;
 };
 
+enum COLLISION_IGNORE {
+    NODES,
+    NONE,
+};
+
 struct Collision {
     unsigned int entity_id;
     float size;
     Vector2 *pos;
+    enum COLLISION_IGNORE IGNORE;
+};
+
+struct ChainNode {
+    unsigned int entity_id;
+    Vector2* target_pos;
 };
 
 /////////////////
@@ -66,15 +77,20 @@ struct ComponentList {
 
     struct PlayerController player_control_systems[max_entity_count];
     unsigned int total_plr_ctrl_systems;
+
+    struct ChainNode chain_node_systems[max_entity_count];
+    unsigned int total_chain_node_systems;
 };
 
 void components_init(struct ComponentList* components);
 void player_create(struct ComponentList* components);
 void obstacle_create(struct ComponentList* components, Vector2 pos);
+void chain_node_create(struct ComponentList* components, Vector2* target_pos);
 
 void update_player_control_system(struct ComponentList* components, struct PlayerController* component);
 void update_movement_system(struct ComponentList* components, struct Movement* component);
 void update_collision_system(struct ComponentList* components, struct Collision* component);
+void update_chain_node_systems(struct ComponentList* components, struct ChainNode* component);
 void draw_circle_system(struct ComponentList components, struct Circle* component);
 
 #endif

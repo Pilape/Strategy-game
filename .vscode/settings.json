@@ -17,6 +17,10 @@
 		"array": "c",
 		"string_view": "c",
 		"initializer_list": "c",
-		"random": "c"
+		"random": "c",
+		"raylib.h": "c",
+		"globals.h": "c",
+		"tilemap.h": "c",
+		"config.h": "c"
 	}
 }
