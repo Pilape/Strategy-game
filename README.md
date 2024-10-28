@@ -2,5 +2,7 @@
  A game
 
 To do list:
--Add movement limit
--Add obstacles + collision
+-Refactor?
+-Obstacles
+-A* pathfinding (maybe linked list first)
+

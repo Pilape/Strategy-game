@@ -3,8 +3,8 @@
 
 #include "raylib.h"
 
-#define WORLD_WIDTH 16
-#define WORLD_LENGTH 16
+#define WORLD_WIDTH 15
+#define WORLD_LENGTH 15
 
 extern const Vector2 TILE_SIZE;
 

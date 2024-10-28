@@ -8,8 +8,8 @@ struct Player player = { 0 };
 
 void PlayerInit()
 {
-    player.tilePos = Vector2Zero();
-    player.pos = Vector2Zero();
+    player.tilePos = (Vector2){round(WORLD_WIDTH/2), round(WORLD_LENGTH/2)};
+    player.pos = TileToScreenPos(player.tilePos);
     player.health = 20;
 }
 

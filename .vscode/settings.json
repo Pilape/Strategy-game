@@ -21,6 +21,13 @@
 		"raylib.h": "c",
 		"globals.h": "c",
 		"tilemap.h": "c",
-		"config.h": "c"
+		"config.h": "c",
+		"optional": "cpp",
+		"stdexcept": "cpp",
+		"functional": "cpp",
+		"type_traits": "cpp",
+		"linkedlist.h": "c",
+		"list.h": "c",
+		"stdlib.h": "c"
 	}
 }

@@ -1,6 +1,7 @@
 #include "tilemap.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "globals.h"
 
 const Vector2 TILE_SIZE = {64, 32};
 
@@ -67,15 +68,15 @@ void TexturesInit()
 
 void DrawTiles()
 {
-    for (int x=0; x<WORLD_WIDTH; x++)
+    for (int x=0; x<=WORLD_WIDTH; x++)
     {
-        for (int y=0; y<WORLD_LENGTH; y++)
+        for (int y=0; y<=WORLD_LENGTH; y++)
         {
             Vector2 screenPos = TileToScreenPos((Vector2){x, y});
             
             DrawTexturePro(floorTileTexture, (Rectangle){0, 0, floorTileTextureSize.x, floorTileTextureSize.y},
-            (Rectangle){screenPos.x, screenPos.y, floorTileTextureSize.x, floorTileTextureSize.y},
-            Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
+                (Rectangle){screenPos.x, screenPos.y, floorTileTextureSize.x, floorTileTextureSize.y},
+                Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
         }
     }
 }

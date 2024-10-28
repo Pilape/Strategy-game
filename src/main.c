@@ -1,6 +1,10 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "stdio.h"
+#include "stdlib.h"
+
+#include "list.h"
 #include "tilemap.h"
 #include "player.h"
 
@@ -8,6 +12,7 @@ Camera2D mainCamera = { 0 };
 
 int main()
 {
+
     const Vector2 SCREEN_SIZE = {800, 450};
     InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "AAAAA game");
 
