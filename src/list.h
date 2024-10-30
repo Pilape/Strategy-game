@@ -3,20 +3,36 @@
 
 typedef struct Node {
 
-    int data;
+    void *data;
     struct Node *next;
 
 } Node;
 
-Node* ListCreateNode(int data);
+#include "stdlib.h"
 
-void ListInsertFront(Node** head, int data);
-int ListPopFront(Node** head);
+Node* ListCreateNode(void *data);
 
-void ListInsertBack(Node** head, int data);
-int ListPopBack(Node **head);
+void ListInsertFront(Node** head, void *data);
+void* ListPopFront(Node** head);
+
+void ListInsertBack(Node** head, void *data);
+void* ListPopBack(Node **head);
 
 int ListLength(Node* head);
 void ListPrint(Node* head);
+
+typedef struct {
+    
+    void *data;
+    int priority;
+
+} PqData;
+
+PqData* PqGetData(Node *pqNode);
+PqData* PqCreateData(int priority, size_t size);
+
+void PqPush(Node **head, PqData *data);
+PqData PqPop(Node **head);
+void PqPrint(Node* head);
 
 #endif

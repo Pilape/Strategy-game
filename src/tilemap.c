@@ -1,11 +1,23 @@
 #include "tilemap.h"
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
 #include "globals.h"
 
 const Vector2 TILE_SIZE = {64, 32};
 
-const int MAP[WORLD_WIDTH][WORLD_LENGTH];
+int Map[WORLD_WIDTH][WORLD_LENGTH];
+
+void MapInit()
+{
+    for (int x=0; x<WORLD_WIDTH; x++)
+    {
+        for (int y=0; y<WORLD_LENGTH; y++)
+        {
+            if ((x+y)%2 == 0) Map[x][y] = 0;
+            else Map[x][y] = 1;
+        }
+    }
+}
 
 Vector2 TileToScreenPos(Vector2 pos)
 {
@@ -58,6 +70,13 @@ Vector2 ScreenToTilePos(Vector2 pos, bool asInt)
     return tilePos;
 }
 
+int IsInBounds(Vector2 pos)
+{
+    if (Vector2Equals(Vector2Clamp(pos, Vector2Zero(), (Vector2){WORLD_WIDTH-1, WORLD_LENGTH-1}), pos)) return true;
+
+    return false;
+}
+
 Texture2D floorTileTexture;
 Vector2 floorTileTextureSize = {64, 64};
 
@@ -68,13 +87,29 @@ void TexturesInit()
 
 void DrawTiles()
 {
-    for (int x=0; x<=WORLD_WIDTH; x++)
+    for (int x=0; x<WORLD_WIDTH; x++)
     {
-        for (int y=0; y<=WORLD_LENGTH; y++)
+        for (int y=0; y<WORLD_LENGTH; y++)
         {
             Vector2 screenPos = TileToScreenPos((Vector2){x, y});
             
-            DrawTexturePro(floorTileTexture, (Rectangle){0, 0, floorTileTextureSize.x, floorTileTextureSize.y},
+            Rectangle tileTextureSource = {0, 0, floorTileTextureSize.x, floorTileTextureSize.y};
+
+            switch (Map[x][y])
+            {
+            case 0:
+                tileTextureSource.x = 0;
+                break;
+            
+            case 1:
+                tileTextureSource.x = floorTileTextureSize.x;
+                break;
+
+            default:
+                tileTextureSource.x = 0;
+            }
+
+            DrawTexturePro(floorTileTexture, tileTextureSource,
                 (Rectangle){screenPos.x, screenPos.y, floorTileTextureSize.x, floorTileTextureSize.y},
                 Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
         }

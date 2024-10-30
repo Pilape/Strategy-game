@@ -28,6 +28,7 @@
 		"type_traits": "cpp",
 		"linkedlist.h": "c",
 		"list.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"string": "c"
 	}
 }

@@ -3,10 +3,16 @@
 
 #include "raylib.h"
 
-#define WORLD_WIDTH 15
-#define WORLD_LENGTH 15
+#define WORLD_WIDTH 16
+#define WORLD_LENGTH 16
 
 extern const Vector2 TILE_SIZE;
+
+extern int Map[WORLD_WIDTH][WORLD_LENGTH];
+
+void MapInit(void);
+
+int IsInBounds(Vector2 pos);
 
 Vector2 TileToScreenPos(Vector2 pos);
 Vector2 ScreenToTilePos(Vector2 pos, bool asInt);

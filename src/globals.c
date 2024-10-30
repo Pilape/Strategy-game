@@ -1,6 +1,6 @@
 #include "globals.h"
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
 
 void TextureDraw(Texture2D texture, Vector2 AtlasPos, Vector2 pos, Vector2 size)
 {

@@ -1,5 +1,6 @@
-#include "raylib.h"
-#include "raymath.h"
+#include <raylib.h>
+#include <raymath.h>
+
 #include "tilemap.h"
 #include "player.h"
 #include "globals.h"
@@ -19,7 +20,7 @@ void PlayerUpdate()
 
     Vector2 mouseTilePos = ScreenToTilePos(GetScreenToWorld2D(GetMousePosition(), mainCamera), true);
     
-    if (Vector2Equals(Vector2Clamp(mouseTilePos, Vector2Zero(), (Vector2){WORLD_WIDTH, WORLD_LENGTH}), mouseTilePos))
+    if (IsInBounds(mouseTilePos))
     {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) player.tilePos = mouseTilePos;
     }
