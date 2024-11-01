@@ -13,6 +13,7 @@ extern int Map[WORLD_WIDTH][WORLD_LENGTH];
 void MapInit(void);
 
 int IsInBounds(Vector2 pos);
+int IsTraversible(Vector2 pos);
 
 Vector2 TileToScreenPos(Vector2 pos);
 Vector2 ScreenToTilePos(Vector2 pos, bool asInt);

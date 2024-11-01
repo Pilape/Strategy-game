@@ -17,6 +17,10 @@ void MapInit()
             else Map[x][y] = 1;
         }
     }
+
+    Map[11][12] = -1; Map[12][12] = -1;
+    Map[11][11] = -1; Map[12][11] = -1;
+
 }
 
 Vector2 TileToScreenPos(Vector2 pos)
@@ -77,6 +81,11 @@ int IsInBounds(Vector2 pos)
     return false;
 }
 
+int IsTraversible(Vector2 pos)
+{
+    return IsInBounds(pos) && Map[(int)pos.x][(int)pos.y] != -1;
+}
+
 Texture2D floorTileTexture;
 Vector2 floorTileTextureSize = {64, 64};
 
@@ -91,6 +100,8 @@ void DrawTiles()
     {
         for (int y=1; y<WORLD_LENGTH; y++)
         {
+            if (Map[x][y] != 0 && Map[x][y] != 1) continue;
+
             Vector2 screenPos = TileToScreenPos((Vector2){x, y});
             
             Rectangle tileTextureSource = {0, 0, floorTileTextureSize.x, floorTileTextureSize.y};

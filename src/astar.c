@@ -40,7 +40,6 @@ typedef struct _pathNode{
     return path;
 } */
 
-
 Node* AStar(Vector2 start, Vector2 target)
 {
     PqNode *open = NULL; // Priority queue
@@ -71,7 +70,7 @@ Node* AStar(Vector2 start, Vector2 target)
             neighbor.x = round(neighbor.x);
             neighbor.y = round(neighbor.y);
 
-            if (!IsInBounds(neighbor) || ListHasVector(&closed, neighbor)) continue;
+            if (!IsTraversible(neighbor) || ListHasVector(&closed, neighbor)) continue;
 
             int neighborFCost = GetFCost(current, target, neighbor);
 
