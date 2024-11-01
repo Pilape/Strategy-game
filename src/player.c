@@ -17,6 +17,14 @@ void PlayerInit()
     player.health = 20;
 }
 
+int Vector2AlmostEquals(Vector2 a, Vector2 b)
+{
+    Vector2 approxA = {round(a.x), round(a.y)};
+    Vector2 approxB = {round(b.x), round(b.y)};
+
+    return Vector2Equals(approxA, approxB);
+}
+
 void PlayerUpdate()
 {
     player.pos = Vector2Lerp(player.pos, TileToScreenPos(player.tilePos), 50 * GetFrameTime());
@@ -29,7 +37,7 @@ void PlayerUpdate()
         ListPrint(path);
     }
 
-    if (ListLength(path) > 0 && Vector2Equals(player.pos, TileToScreenPos(player.tilePos)))
+    if (ListLength(path) > 0 && Vector2AlmostEquals(player.pos, TileToScreenPos(player.tilePos)))
     {
         player.tilePos = ListPopFront(&path);
     }
