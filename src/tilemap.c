@@ -9,9 +9,9 @@ int Map[WORLD_WIDTH][WORLD_LENGTH];
 
 void MapInit()
 {
-    for (int x=0; x<WORLD_WIDTH; x++)
+    for (int x=1; x<WORLD_WIDTH; x++)
     {
-        for (int y=0; y<WORLD_LENGTH; y++)
+        for (int y=1; y<WORLD_LENGTH; y++)
         {
             if ((x+y)%2 == 0) Map[x][y] = 0;
             else Map[x][y] = 1;
@@ -72,7 +72,7 @@ Vector2 ScreenToTilePos(Vector2 pos, bool asInt)
 
 int IsInBounds(Vector2 pos)
 {
-    if (Vector2Equals(Vector2Clamp(pos, Vector2Zero(), (Vector2){WORLD_WIDTH-1, WORLD_LENGTH-1}), pos)) return true;
+    if (Vector2Equals(Vector2Clamp(pos, Vector2One(), (Vector2){WORLD_WIDTH-1, WORLD_LENGTH-1}), pos)) return true;
 
     return false;
 }
@@ -87,9 +87,9 @@ void TexturesInit()
 
 void DrawTiles()
 {
-    for (int x=0; x<WORLD_WIDTH; x++)
+    for (int x=1; x<WORLD_WIDTH; x++)
     {
-        for (int y=0; y<WORLD_LENGTH; y++)
+        for (int y=1; y<WORLD_LENGTH; y++)
         {
             Vector2 screenPos = TileToScreenPos((Vector2){x, y});
             

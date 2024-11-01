@@ -4,8 +4,11 @@
 #include "tilemap.h"
 #include "player.h"
 #include "globals.h"
+#include "astar.h"
 
 struct Player player = { 0 };
+
+Node* path;
 
 void PlayerInit()
 {
@@ -20,9 +23,15 @@ void PlayerUpdate()
 
     Vector2 mouseTilePos = ScreenToTilePos(GetScreenToWorld2D(GetMousePosition(), mainCamera), true);
     
-    if (IsInBounds(mouseTilePos))
+    if (IsInBounds(mouseTilePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) player.tilePos = mouseTilePos;
+        path = AStar(player.tilePos, mouseTilePos);
+        ListPrintVector(path);
+    }
+
+    if (ListLength(path) > 0 && Vector2Equals(player.pos, TileToScreenPos(player.tilePos)))
+    {
+        player.tilePos = *(Vector2*)ListPopFront(&path);
     }
 
 }

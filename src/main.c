@@ -42,7 +42,7 @@ int main()
     mainCamera.rotation = 0.0f;
     mainCamera.zoom = 1.0f;
 
-    doThing();
+    //doThing();
 
     while (!WindowShouldClose())
     {

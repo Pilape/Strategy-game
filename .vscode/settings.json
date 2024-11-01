@@ -29,6 +29,7 @@
 		"linkedlist.h": "c",
 		"list.h": "c",
 		"stdlib.h": "c",
-		"string": "c"
+		"string": "c",
+		"string.h": "c"
 	}
 }

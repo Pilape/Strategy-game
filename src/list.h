@@ -35,4 +35,9 @@ void PqPush(Node **head, PqData *data);
 PqData PqPop(Node **head);
 void PqPrint(Node* head);
 
+#include "raylib.h"
+int ListHasVector(Node **head, Vector2 vector);
+int PqHasVector(Node **head, Vector2 vector);
+void ListPrintVector(Node* head);
+
 #endif

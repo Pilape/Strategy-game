@@ -25,6 +25,11 @@ void ListInsertBack(Node **head, void *data)
     Node *newNode = ListCreateNode(data);
     Node *currentNode = *head;
 
+    if (*head == NULL) {
+        ListInsertFront(head, data);
+        return;
+    }
+
     while (currentNode->next)
     {
         currentNode = currentNode->next;
@@ -115,6 +120,11 @@ void PqPush(Node **head, PqData *data)
 {
     Node* newNode = ListCreateNode(data);
 
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
     if (PqGetData(*head)->priority > data->priority)
     {
         newNode->next = *head;
@@ -162,6 +172,50 @@ void PqPrint(Node* head)
     while (currentNode)
     {
         printf("[%d] ", *(int*)PqGetData(currentNode)->data);
+        currentNode = currentNode->next;
+    }
+    printf("\n");
+}
+
+#include "raylib.h"
+#include "raymath.h"
+
+int ListHasVector(Node **head, Vector2 vector)
+{
+    Node* currentNode = *head;
+    while (currentNode->next)
+    {
+        if (Vector2Equals(*(Vector2*)currentNode->data, vector)) return 1;
+        currentNode = currentNode->next;
+    }
+    
+    return 0;
+}
+
+int PqHasVector(Node **head, Vector2 vector)
+{
+    if (*head == NULL) return 0;
+
+    Node* currentNode = *head;
+
+    while (currentNode->next)
+    {
+        if (Vector2Equals(*(Vector2*)PqGetData(currentNode), vector)) return 1;
+
+        currentNode = currentNode->next;
+    }
+    return 0;
+}
+
+void ListPrintVector(Node* head)
+{
+    printf("List: ");
+    Node *currentNode = head;
+
+    while (currentNode)
+    {
+        Vector2 vector = *(Vector2*)(currentNode)->data;
+        printf("[x: %d, y: %d] ", (int)vector.x, (int)vector.y);
         currentNode = currentNode->next;
     }
     printf("\n");
