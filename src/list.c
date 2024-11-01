@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Node* ListCreateNode(void *data)
+#include "raylib.h"
+
+Node* ListCreateNode(Vector2 data)
 {
     Node *newNode = malloc(sizeof(Node));
     if (newNode == NULL) perror("Function 'ListCreateNode' could not allocate memory");
@@ -13,14 +15,14 @@ Node* ListCreateNode(void *data)
     return newNode;
 }
 
-void ListInsertFront(Node **head, void *data)
+void ListInsertFront(Node **head, Vector2 data)
 {
     Node* newNode = ListCreateNode(data);
     newNode->next = *head;
     *head = newNode;
 }
 
-void ListInsertBack(Node **head, void *data)
+void ListInsertBack(Node **head, Vector2 data)
 {
     Node *newNode = ListCreateNode(data);
     Node *currentNode = *head;
@@ -37,16 +39,16 @@ void ListInsertBack(Node **head, void *data)
     currentNode->next = newNode;
 }
 
-void* ListPopFront(Node **head)
+Vector2 ListPopFront(Node **head)
 {
     if (*head == NULL)
     {
         printf("List is empty \n");
-        return NULL;
+        return (Vector2){0, 0};
     }
 
     Node *temp = *head;
-    void *data = temp->data;
+    Vector2 data = temp->data;
 
     *head = temp->next;
     free(temp);
@@ -55,11 +57,11 @@ void* ListPopFront(Node **head)
     return data;
 }
 
-void* ListPopBack(Node **head)
+Vector2 ListPopBack(Node **head)
 {
     if (*head == NULL) {
         printf("List is empty \n");
-        return NULL;
+        return (Vector2){0, 0};
     }
 
     Node *currentNode = *head;
@@ -68,7 +70,7 @@ void* ListPopBack(Node **head)
         currentNode = currentNode->next;
     }
 
-    void *data = currentNode->next->data;
+    Vector2 data = currentNode->next->data;
     free(currentNode->next);
 
     currentNode->next = NULL;
@@ -97,15 +99,15 @@ void ListPrint(Node* head)
 
     while (currentNode)
     {
-        printf("[%d] ", *(int*)currentNode->data);
+        printf("[x: %d, y: %d] ", (int)currentNode->data.x, (int)currentNode->data.y);
         currentNode = currentNode->next;
     }
     printf("\n");
 }
 
-PqData* PqGetData(Node *pqNode) { return (PqData*)(pqNode)->data; }
+//PqData* PqGetData(Node *pqNode) { return (PqData*)(pqNode)->data; }
 
-PqData* PqCreateData(int priority, size_t size)
+/* PqNode* PqCreateData(int priority, size_t size)
 {
     PqData *temp = malloc(sizeof(PqData));
     if (temp == NULL) perror("Faield to allocate memory [Function: PqCreateData]");
@@ -114,18 +116,29 @@ PqData* PqCreateData(int priority, size_t size)
     temp->data = malloc(sizeof(size));
 
     return temp;
-}
+} */
 
-void PqPush(Node **head, PqData *data)
+PqNode *PqCreateNode(Vector2 data, int priority)
 {
-    Node* newNode = ListCreateNode(data);
+    PqNode *newNode = malloc(sizeof(PqNode));
+    if (newNode == NULL) perror("Function 'ListCreateNode' could not allocate memory");
+    newNode->data = data;
+    newNode->priority = priority;
+    newNode->next = NULL;
+
+    return newNode;
+};
+
+void PqPush(PqNode **head, Vector2 data, int priority)
+{
+    PqNode* newNode = PqCreateNode(data, priority);
 
     if (*head == NULL) {
         *head = newNode;
         return;
     }
 
-    if (PqGetData(*head)->priority > data->priority)
+    if ((*head)->priority > priority)
     {
         newNode->next = *head;
         (*head) = newNode;
@@ -133,9 +146,9 @@ void PqPush(Node **head, PqData *data)
         return;
     }
 
-    Node* currentNode = *head;
+    PqNode* currentNode = *head;
 
-    while (currentNode->next && PqGetData(currentNode->next)->priority < data->priority)
+    while (currentNode->next && currentNode->next->priority < priority)
     {
         currentNode = currentNode->next;
     }
@@ -144,34 +157,32 @@ void PqPush(Node **head, PqData *data)
     currentNode->next = newNode;
 }
 
-PqData PqPop(Node **head)
+Vector2 PqPop(PqNode **head)
 {
     if (*head == NULL)
     {
         printf("List is empty \n");
-        return *PqCreateData(-1, 0);
+        return (Vector2){0, 0};
     }
 
-    Node *temp = *head;
-    PqData data = *PqGetData(temp);
+    PqNode *temp = *head;
+    Vector2 data = temp->data;
     *head = temp->next;
 
-    free(temp->data);
-    temp->data = NULL;
     free(temp);
     temp = NULL;
 
     return data;
 }
 
-void PqPrint(Node* head)
+void PqPrint(PqNode* head)
 {
     printf("List: ");
-    Node *currentNode = head;
+    PqNode *currentNode = head;
 
     while (currentNode)
     {
-        printf("[%d] ", *(int*)PqGetData(currentNode)->data);
+        printf("[x: %f, y: %f] ", currentNode->data.x, currentNode->data.y);
         currentNode = currentNode->next;
     }
     printf("\n");
@@ -185,38 +196,24 @@ int ListHasVector(Node **head, Vector2 vector)
     Node* currentNode = *head;
     while (currentNode->next)
     {
-        if (Vector2Equals(*(Vector2*)currentNode->data, vector)) return 1;
+        if (Vector2Equals(currentNode->data, vector)) return 1;
         currentNode = currentNode->next;
     }
     
     return 0;
 }
 
-int PqHasVector(Node **head, Vector2 vector)
+int PqHasVector(PqNode **head, Vector2 vector)
 {
     if (*head == NULL) return 0;
 
-    Node* currentNode = *head;
+    PqNode* currentNode = *head;
 
     while (currentNode->next)
     {
-        if (Vector2Equals(*(Vector2*)PqGetData(currentNode), vector)) return 1;
+        if (Vector2Equals(currentNode->data, vector)) return 1;
 
         currentNode = currentNode->next;
     }
     return 0;
-}
-
-void ListPrintVector(Node* head)
-{
-    printf("List: ");
-    Node *currentNode = head;
-
-    while (currentNode)
-    {
-        Vector2 vector = *(Vector2*)(currentNode)->data;
-        printf("[x: %d, y: %d] ", (int)vector.x, (int)vector.y);
-        currentNode = currentNode->next;
-    }
-    printf("\n");
 }

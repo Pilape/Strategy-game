@@ -26,12 +26,12 @@ void PlayerUpdate()
     if (IsInBounds(mouseTilePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         path = AStar(player.tilePos, mouseTilePos);
-        ListPrintVector(path);
+        ListPrint(path);
     }
 
     if (ListLength(path) > 0 && Vector2Equals(player.pos, TileToScreenPos(player.tilePos)))
     {
-        player.tilePos = *(Vector2*)ListPopFront(&path);
+        player.tilePos = ListPopFront(&path);
     }
 
 }

@@ -1,27 +1,29 @@
 #ifndef LIST_H_
 #define LIST_H_
 
+#include "raylib.h"
+
 typedef struct Node {
 
-    void *data;
+    Vector2 data;
     struct Node *next;
 
 } Node;
 
 #include "stdlib.h"
 
-Node* ListCreateNode(void *data);
+Node* ListCreateNode(Vector2 data);
 
-void ListInsertFront(Node** head, void *data);
-void* ListPopFront(Node** head);
+void ListInsertFront(Node** head, Vector2 data);
+Vector2 ListPopFront(Node** head);
 
-void ListInsertBack(Node** head, void *data);
-void* ListPopBack(Node **head);
+void ListInsertBack(Node** head, Vector2 data);
+Vector2 ListPopBack(Node **head);
 
 int ListLength(Node* head);
 void ListPrint(Node* head);
 
-typedef struct {
+/* typedef struct {
     
     void *data;
     int priority;
@@ -29,15 +31,23 @@ typedef struct {
 } PqData;
 
 PqData* PqGetData(Node *pqNode);
-PqData* PqCreateData(int priority, size_t size);
+PqData* PqCreateData(int priority, size_t size); */
 
-void PqPush(Node **head, PqData *data);
-PqData PqPop(Node **head);
-void PqPrint(Node* head);
+typedef struct _PqNode {
+
+    Vector2 data;
+    int priority;
+    struct _PqNode *next;
+
+} PqNode;
+
+
+void PqPush(PqNode **head, Vector2 data, int priority);
+Vector2 PqPop(PqNode **head);
+void PqPrint(PqNode* head);
 
 #include "raylib.h"
 int ListHasVector(Node **head, Vector2 vector);
-int PqHasVector(Node **head, Vector2 vector);
-void ListPrintVector(Node* head);
+int PqHasVector(PqNode **head, Vector2 vector);
 
 #endif

@@ -15,7 +15,7 @@ int GetFCost(Vector2 start, Vector2 target, Vector2 current)
     return gCost + hCost;
 }
 
-
+/* 
 typedef struct _pathNode{
     Vector2 *pos;
 
@@ -24,9 +24,9 @@ typedef struct _pathNode{
     struct _pathNode *Child1;
     struct _pathNode *Child2;
     struct _pathNode *Child3;
-} PathNode;
+} PathNode; */
 
-Node* ReconstructPath(PathNode *target)
+/* Node* ReconstructPath(PathNode *target)
 {
     Node *path = NULL;
 
@@ -38,16 +38,16 @@ Node* ReconstructPath(PathNode *target)
     }
     
     return path;
-}
+} */
 
 
 Node* AStar(Vector2 start, Vector2 target)
 {
-    Node *open = NULL; // Priority queue
-    PqData *startNode = PqCreateData(0, sizeof(Vector2));
-    *(Vector2*)startNode->data = start;
+    PqNode *open = NULL; // Priority queue
+/*     PqData *startNode = PqCreateData(0, sizeof(Vector2));
+    *(Vector2*)startNode->data = start; */
 
-    PqPush(&open, startNode);
+    PqPush(&open, start, 0);
 
     Node *closed = NULL; // Linked list
 
@@ -55,32 +55,28 @@ Node* AStar(Vector2 start, Vector2 target)
 
     while (open)
     {
-        PqData current = PqPop(&open);
-        Vector2 *currentData = (Vector2*)current.data;
-        ListInsertBack(&closed, currentData);
+        Vector2 current = PqPop(&open);
+        //Vector2 *currentData = (Vector2*)current.data;
+        ListInsertBack(&closed, current);
 
-        if (Vector2Equals(*(Vector2*)current.data, target)) return closed;
+        if (Vector2Equals(current, target)) return closed;
 
         for (int i=0; i<4; i++)
         {
 
-            Vector2 neighbor = Vector2Add(*(Vector2*)current.data, neighbors[i]);
+            Vector2 neighbor = Vector2Add(current, neighbors[i]);
             neighbor.x = round(neighbor.x);
             neighbor.y = round(neighbor.y);
 
             if (!IsInBounds(neighbor) || ListHasVector(&closed, neighbor)) continue;
 
-            int neighborFCost = GetFCost(*currentData, target, neighbor);
+            int neighborFCost = GetFCost(current, target, neighbor);
 
             // Set parent here
 
             if (!PqHasVector(&open, neighbor))
-            {
-                PqData *neighborData = PqCreateData(neighborFCost, sizeof(Vector2));
-                *(Vector2*)neighborData->data = neighbor;
-                
-                PqPush(&open, neighborData);
-            
+            {   
+                PqPush(&open, neighbor, neighborFCost);
             }
         }
     }
