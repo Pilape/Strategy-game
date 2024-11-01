@@ -22,6 +22,7 @@ Vector2 ListPopBack(Node **head);
 
 int ListLength(Node* head);
 void ListPrint(Node* head);
+void ListFree(Node *head);
 
 /* typedef struct {
     
@@ -49,5 +50,6 @@ void PqPrint(PqNode* head);
 #include "raylib.h"
 int ListHasVector(Node **head, Vector2 vector);
 int PqHasVector(PqNode **head, Vector2 vector);
+void PqFree(PqNode *head);
 
 #endif

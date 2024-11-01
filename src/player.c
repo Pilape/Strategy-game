@@ -23,7 +23,7 @@ void PlayerUpdate()
 
     Vector2 mouseTilePos = ScreenToTilePos(GetScreenToWorld2D(GetMousePosition(), mainCamera), true);
     
-    if (IsInBounds(mouseTilePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    if (IsInBounds(mouseTilePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && ListLength(path) == 0)
     {
         path = AStar(player.tilePos, mouseTilePos);
         ListPrint(path);

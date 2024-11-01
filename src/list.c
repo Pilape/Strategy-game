@@ -105,6 +105,14 @@ void ListPrint(Node* head)
     printf("\n");
 }
 
+void ListFree(Node *head)
+{
+    while (head)
+    {
+        ListPopFront(&head);
+    }
+}
+
 //PqData* PqGetData(Node *pqNode) { return (PqData*)(pqNode)->data; }
 
 /* PqNode* PqCreateData(int priority, size_t size)
@@ -216,4 +224,12 @@ int PqHasVector(PqNode **head, Vector2 vector)
         currentNode = currentNode->next;
     }
     return 0;
+}
+
+void PqFree(PqNode *head)
+{
+    while (head)
+    {
+        PqPop(&head);
+    }
 }

@@ -44,8 +44,6 @@ typedef struct _pathNode{
 Node* AStar(Vector2 start, Vector2 target)
 {
     PqNode *open = NULL; // Priority queue
-/*     PqData *startNode = PqCreateData(0, sizeof(Vector2));
-    *(Vector2*)startNode->data = start; */
 
     PqPush(&open, start, 0);
 
@@ -56,10 +54,15 @@ Node* AStar(Vector2 start, Vector2 target)
     while (open)
     {
         Vector2 current = PqPop(&open);
-        //Vector2 *currentData = (Vector2*)current.data;
         ListInsertBack(&closed, current);
 
-        if (Vector2Equals(current, target)) return closed;
+        if (Vector2Equals(current, target)) // Success
+        {
+            PqFree(open);
+            open = NULL;
+
+            return closed;
+        }
 
         for (int i=0; i<4; i++)
         {
@@ -81,5 +84,11 @@ Node* AStar(Vector2 start, Vector2 target)
         }
     }
 
-    return closed;
+    PqFree(open);
+    open = NULL;
+
+    ListFree(closed);
+    closed = NULL;
+
+    return NULL; // Failure
 }
