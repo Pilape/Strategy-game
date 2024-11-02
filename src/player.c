@@ -46,6 +46,9 @@ void PlayerUpdate()
 
 void PlayerDraw()
 {
-    DrawCircleV(player.pos, 18.0f, BLACK);
-    DrawCircleV(player.pos, 15.0f, WHITE);
+    DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
+        (Rectangle){player.pos.x, player.pos.y, 64, 64},
+        (Vector2){32, 48}, 0, WHITE);
+/*     DrawCircleV(player.pos, 18.0f, BLACK);
+    DrawCircleV(player.pos, 15.0f, WHITE); */
 }

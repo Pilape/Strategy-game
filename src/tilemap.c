@@ -86,13 +86,7 @@ int IsTraversible(Vector2 pos)
     return IsInBounds(pos) && Map[(int)pos.x][(int)pos.y] != -1;
 }
 
-Texture2D floorTileTexture;
 Vector2 floorTileTextureSize = {64, 64};
-
-void TexturesInit()
-{
-    floorTileTexture = LoadTexture("resources/tileset.png");
-}
 
 void DrawTiles()
 {
@@ -120,7 +114,7 @@ void DrawTiles()
                 tileTextureSource.x = 0;
             }
 
-            DrawTexturePro(floorTileTexture, tileTextureSource,
+            DrawTexturePro(Textures.floorTiles, tileTextureSource,
                 (Rectangle){screenPos.x, screenPos.y, floorTileTextureSize.x, floorTileTextureSize.y},
                 Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
         }
