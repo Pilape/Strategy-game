@@ -34,7 +34,7 @@ void PlayerUpdate()
     if (IsTraversible(mouseTilePos) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && ListLength(path) == 0)
     {
         path = AStar(player.tilePos, mouseTilePos);
-        ListPrint(path);
+        //ListPrint(path);
     }
 
     if (ListLength(path) > 0 && Vector2AlmostEquals(player.pos, TileToScreenPos(player.tilePos)))

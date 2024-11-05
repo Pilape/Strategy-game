@@ -6,6 +6,71 @@
 #include <raymath.h>
 
 #include <string.h>
+#include <stdio.h>
+
+#define MAP_SIZE WORLD_WIDTH * WORLD_LENGTH
+
+typedef struct {
+    Vector2 keys[MAP_SIZE];
+    Vector2 values[MAP_SIZE];
+    int size;
+} Dict;
+
+int MapGetIndex(Dict *map, Vector2 key)
+{
+    for (int i=0; i<map->size; i++)
+    {
+        if (Vector2Equals(map->keys[i], key))
+        {
+            return i;
+        }
+    }
+    return -1; // Failure :(
+}
+
+void MapInsert(Dict *map, Vector2 key, Vector2 value)
+{
+    int index = MapGetIndex(map, key);
+
+    if (index != -1)
+    {
+        map->values[index] = value;
+        return;
+    }
+
+    map->keys[map->size] = key;
+    map->values[map->size] = value;
+    map->size++;
+}
+
+Vector2 MapGet(Dict *map, Vector2 key)
+{
+    int index = MapGetIndex(map, key);
+
+    if (index == -1) { // Failure :(
+        //printf("Invalid key \n");
+        return Vector2Zero(); 
+    }
+
+    return map->values[index];
+}
+
+Node* ReconstructPath(Dict *cameFrom, Vector2 end)
+{
+    Node *path = NULL;
+
+    Vector2 current = end;
+    for (int i=0; i<cameFrom->size; i++)
+    {
+        if (Vector2Equals(current, Vector2Zero())) continue;
+
+        ListInsertFront(&path, current);
+        current = MapGet(cameFrom, current);
+    }
+
+    return path;
+}
+
 
 int GetFCost(Vector2 start, Vector2 target, Vector2 current)
 {
@@ -15,31 +80,6 @@ int GetFCost(Vector2 start, Vector2 target, Vector2 current)
     return gCost + hCost;
 }
 
-/* 
-typedef struct _pathNode{
-    Vector2 *pos;
-
-    struct _pathNode *parent;
-
-    struct _pathNode *Child1;
-    struct _pathNode *Child2;
-    struct _pathNode *Child3;
-} PathNode; */
-
-/* Node* ReconstructPath(PathNode *target)
-{
-    Node *path = NULL;
-
-    PathNode *currentNode = target;
-    while (target->parent)
-    {
-        ListInsertBack(&path, currentNode->pos);
-        currentNode = currentNode->parent;
-    }
-    
-    return path;
-} */
-
 Node* AStar(Vector2 start, Vector2 target)
 {
     PqNode *open = NULL; // Priority queue
@@ -47,6 +87,8 @@ Node* AStar(Vector2 start, Vector2 target)
     PqPush(&open, start, 0);
 
     Node *closed = NULL; // Linked list
+
+    Dict cameFrom = { 0 };
 
     Vector2 neighbors[4] = {(Vector2){1, 0}, (Vector2){-1, 0}, (Vector2){0, 1}, (Vector2){0, -1}};
 
@@ -60,7 +102,10 @@ Node* AStar(Vector2 start, Vector2 target)
             PqFree(open);
             open = NULL;
 
-            return closed;
+            ListFree(closed);
+            closed = NULL;
+
+            return ReconstructPath(&cameFrom, current);
         }
 
         for (int i=0; i<4; i++)
@@ -75,6 +120,7 @@ Node* AStar(Vector2 start, Vector2 target)
             int neighborFCost = GetFCost(current, target, neighbor);
 
             // Set parent here
+            MapInsert(&cameFrom, neighbor, current);
 
             if (!PqHasVector(&open, neighbor))
             {   
