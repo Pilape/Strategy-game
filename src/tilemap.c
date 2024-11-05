@@ -25,11 +25,11 @@ void MapInit()
 
 Vector2 TileToScreenPos(Vector2 pos)
 {
+    Matrix TransfromMatrix = { 0 };
+    TransfromMatrix.m0 = 0.5f * TILE_SIZE.x; TransfromMatrix.m4 = -0.5f * TILE_SIZE.x;
+    TransfromMatrix.m1 = 0.5f * TILE_SIZE.y; TransfromMatrix.m5 = 0.5f * TILE_SIZE.y;
 
-    int x = pos.x * 0.5f * TILE_SIZE.x + pos.y * -0.5f * TILE_SIZE.x;
-    int y = pos.x * 0.5f * TILE_SIZE.y + pos.y * 0.5f * TILE_SIZE.y;
-
-    return (Vector2){x, y};
+    return Vector2Transform(pos, TransfromMatrix);
 }
 
 struct Matrix2x2 {
