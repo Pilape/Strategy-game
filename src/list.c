@@ -201,6 +201,8 @@ void PqPrint(PqNode* head)
 
 int ListHasVector(Node **head, Vector2 vector)
 {
+    if (head == NULL) return 0; // If list empty
+
     Node* currentNode = *head;
     while (currentNode->next)
     {

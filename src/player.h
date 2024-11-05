@@ -6,6 +6,7 @@ struct Player
     Vector2 pos;
     Vector2 tilePos;
     int health;
+    int range;
 };
 extern struct Player player;
 

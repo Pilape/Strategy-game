@@ -5,5 +5,6 @@
 #include "raylib.h"
 
 Node* AStar(Vector2 start, Vector2 target);
+Node* GetReachableNodes(Vector2 start, int range);
 
 #endif

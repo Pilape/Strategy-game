@@ -74,8 +74,8 @@ Node* ReconstructPath(Dict *cameFrom, Vector2 end)
 
 int GetFCost(Vector2 start, Vector2 target, Vector2 current)
 {
-    int gCost = Vector2Distance(current, start);
-    int hCost = Vector2Distance(current, target);
+    int gCost = Vector2Distance(current, start)*10;
+    int hCost = Vector2Distance(current, target)*10;
 
     return gCost + hCost;
 }
@@ -117,7 +117,7 @@ Node* AStar(Vector2 start, Vector2 target)
 
             if (!IsTraversible(neighbor) || ListHasVector(&closed, neighbor)) continue;
 
-            int neighborFCost = GetFCost(current, target, neighbor);
+            int neighborFCost = GetFCost(current, target, neighbor)*10;
 
             // Set parent here
             MapInsert(&cameFrom, neighbor, current);
@@ -136,4 +136,47 @@ Node* AStar(Vector2 start, Vector2 target)
     closed = NULL;
 
     return NULL; // Failure
+}
+
+Node* GetReachableNodes(Vector2 start, int range)
+{
+    PqNode *open = NULL; // Priority queue
+    PqPush(&open, start, 0);
+
+    Node *closed = NULL; // Linked list
+
+    Vector2 neighbors[4] = {(Vector2){1, 0}, (Vector2){-1, 0}, (Vector2){0, 1}, (Vector2){0, -1}};
+
+    while (open)
+    {
+        if (open->priority > range*10) // If shortest distance is out of reach
+        {
+            ListInsertBack(&closed, PqPop(&open));
+            break;
+        }
+
+        Vector2 current = PqPop(&open);
+        ListInsertBack(&closed, current);
+
+        for (int i=0; i<4; i++)
+        {
+            Vector2 neighbor = Vector2Add(current, neighbors[i]);
+            neighbor.x = round(neighbor.x);
+            neighbor.y = round(neighbor.y);
+
+            if (!IsTraversible(neighbor) || ListHasVector(&closed, neighbor)) continue;
+
+            int neighborCost = Vector2Distance(neighbor, start)*10;
+
+            if (!PqHasVector(&open, neighbor))
+            {   
+                PqPush(&open, neighbor, neighborCost);
+            }
+        }
+    }
+
+    PqFree(open);
+    open = NULL;
+
+    return closed; // Failure
 }
