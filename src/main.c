@@ -7,13 +7,20 @@
 #include "tilemap.h"
 #include "player.h"
 #include "enemy.h"
+#include "globals.h"
+
+#define MIN(a, b) ((a)<(b)? (a) : (b))
 
 Camera2D mainCamera = { 0 };
 
 int main()
 {
+    int scale = 1;
     const Vector2 SCREEN_SIZE = {800, 450};
+    
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "AAAAA game");
+    SetWindowMinSize(950, 500);
 
     TexturesInit();
     MapInit();
@@ -21,7 +28,7 @@ int main()
     mainCamera.target = TileToScreenPos(player.base.tilePos);
     mainCamera.offset = Vector2Scale(SCREEN_SIZE, 0.5f);
     mainCamera.rotation = 0.0f;
-    mainCamera.zoom = 1.0f;
+    mainCamera.zoom = scale;
 
     Enemy enemy = { 0 };
     EnemyInit(&enemy);
@@ -32,6 +39,15 @@ int main()
         PlayerUpdate();
 
         EnemyUpdate(&enemy);
+
+        if (IsWindowResized() && !IsWindowMaximized()) // Only maximize no manual rescaling
+        {
+            SetWindowSize(SCREEN_SIZE.x, SCREEN_SIZE.y);
+        }
+
+        scale = MIN(GetScreenWidth()/SCREEN_SIZE.x, GetScreenHeight()/SCREEN_SIZE.y);
+        mainCamera.zoom = scale;
+        mainCamera.offset = Vector2Scale((Vector2){GetScreenWidth(), GetScreenHeight()}, 0.5f);
 
         BeginDrawing();
             ClearBackground(DARKGRAY);

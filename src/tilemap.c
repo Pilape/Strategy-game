@@ -9,9 +9,9 @@ int Map[WORLD_WIDTH][WORLD_LENGTH];
 
 void MapInit()
 {
-    for (int x=1; x<WORLD_WIDTH; x++)
+    for (int x=1; x<=WORLD_WIDTH; x++)
     {
-        for (int y=1; y<WORLD_LENGTH; y++)
+        for (int y=1; y<=WORLD_LENGTH; y++)
         {
             if ((x+y)%2 == 0) Map[x][y] = 0;
             else Map[x][y] = 1;
