@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 
+int Vector2AlmostEquals(Vector2 a, Vector2 b);
+
 struct Textures{
 
     Texture2D floorTiles;

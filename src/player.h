@@ -1,12 +1,12 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include "entity.h"
+
 struct Player
 {
-    Vector2 pos;
-    Vector2 tilePos;
-    int health;
-    int range;
+    Entity base;
+    Node *reachableNodes;
 };
 extern struct Player player;
 

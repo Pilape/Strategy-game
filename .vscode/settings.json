@@ -30,6 +30,9 @@
 		"list.h": "c",
 		"stdlib.h": "c",
 		"string": "c",
-		"string.h": "c"
+		"string.h": "c",
+		"astar.h": "c",
+		"entity.h": "c",
+		"enemy.h": "c"
 	}
 }
