@@ -15,7 +15,7 @@ int Vector2AlmostEquals(Vector2 a, Vector2 b)
 void TexturesInit()
 {
     Textures.floorTiles = LoadTexture("resources/tileset.png");
-    Textures.player = LoadTexture("resources/isometric-block-wizard.png");
+    Textures.player = LoadTexture("resources/player.png");
 }
 
 void TextureDraw(Texture2D texture, Vector2 AtlasPos, Vector2 pos, Vector2 size)

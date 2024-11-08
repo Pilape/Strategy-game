@@ -52,7 +52,7 @@ void DrawReachableNodes()
 
         DrawTexturePro(Textures.floorTiles, (Rectangle){128, 0, 64, 64},
             (Rectangle){screenPos.x, screenPos.y, 64, 64},
-            Vector2Scale(TILE_SIZE, 0.5f), 0, BLUE);
+            Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
         
         currentNode = currentNode->next;
     }

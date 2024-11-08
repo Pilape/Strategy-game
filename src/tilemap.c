@@ -9,17 +9,8 @@ int Map[WORLD_WIDTH][WORLD_LENGTH];
 
 void MapInit()
 {
-    for (int x=1; x<=WORLD_WIDTH; x++)
-    {
-        for (int y=1; y<=WORLD_LENGTH; y++)
-        {
-            if ((x+y)%2 == 0) Map[x][y] = 0;
-            else Map[x][y] = 1;
-        }
-    }
-
-    Map[11][12] = -1; Map[12][12] = -1;
-    Map[11][11] = -1; Map[12][11] = -1;
+    Map[11][12] = PIT; Map[12][12] = PIT;
+    Map[11][11] = PIT; Map[12][11] = PIT;
 
 }
 
@@ -83,7 +74,7 @@ int IsInBounds(Vector2 pos)
 
 int IsTraversible(Vector2 pos)
 {
-    return IsInBounds(pos) && Map[(int)pos.x][(int)pos.y] != -1;
+    return IsInBounds(pos) && Map[(int)pos.x][(int)pos.y] != PIT;
 }
 
 Vector2 floorTileTextureSize = {64, 64};
@@ -94,22 +85,18 @@ void DrawTiles()
     {
         for (int y=1; y<WORLD_LENGTH; y++)
         {
-            if (Map[x][y] != 0 && Map[x][y] != 1) continue;
-
             Vector2 screenPos = TileToScreenPos((Vector2){x, y});
             
             Rectangle tileTextureSource = {0, 0, floorTileTextureSize.x, floorTileTextureSize.y};
 
             switch (Map[x][y])
             {
-            case 0:
+            case FLOOR:
                 tileTextureSource.x = 0;
                 break;
-            
-            case 1:
+            case PIT:
                 tileTextureSource.x = floorTileTextureSize.x;
                 break;
-
             default:
                 tileTextureSource.x = 0;
             }

@@ -6,6 +6,11 @@
 #define WORLD_WIDTH 16
 #define WORLD_LENGTH 16
 
+enum TILE_ID {
+    FLOOR,
+    PIT,
+};
+
 extern const Vector2 TILE_SIZE;
 
 extern int Map[WORLD_WIDTH][WORLD_LENGTH];
