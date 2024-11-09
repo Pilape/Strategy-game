@@ -11,7 +11,7 @@ struct Player
 extern struct Player player;
 
 void PlayerInit(void);
-void PlayerUpdate(void);
+void PlayerUpdatePath(void);
 void PlayerDraw(void);
 
 #endif

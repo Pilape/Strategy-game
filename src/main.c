@@ -8,6 +8,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "globals.h"
+#include "turns.h"
 
 #define MIN(a, b) ((a)<(b)? (a) : (b))
 
@@ -32,13 +33,15 @@ int main()
 
     Enemy enemy = { 0 };
     EnemyInit(&enemy);
-    EnemyTurnStart(&enemy);
+
+    currentEntity = entities;
+
+    NextTurn();
 
     while (!WindowShouldClose())
     {
-        PlayerUpdate();
-
-        EnemyUpdate(&enemy);
+        EntitiesUpdate(entities);
+        DoTurn();
 
         if (IsWindowResized() && !IsWindowMaximized()) // Only maximize no manual rescaling
         {
@@ -50,7 +53,7 @@ int main()
         mainCamera.offset = Vector2Scale((Vector2){GetScreenWidth(), GetScreenHeight()}, 0.5f);
 
         BeginDrawing();
-            ClearBackground(DARKGRAY);
+            ClearBackground(BLACK);
 
             BeginMode2D(mainCamera);
                 DrawTiles();

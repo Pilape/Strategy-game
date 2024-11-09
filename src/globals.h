@@ -14,7 +14,7 @@ struct Textures{
 
 extern struct Textures Textures;
 
-void TexturesInit();
+void TexturesInit(void);
 
 extern Camera2D mainCamera;
 void TextureDraw(Texture2D texture, Vector2 AtlasPos, Vector2 pos, Vector2 size);

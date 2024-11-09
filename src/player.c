@@ -6,41 +6,34 @@
 #include "globals.h"
 #include "astar.h"
 #include "entity.h"
+#include "turns.h"
 
 struct Player player = { 0 };
 
-void PlayerInit()
+void PlayerUpdatePath()
 {
-    EntityInit(&player.base, (Vector2){round(WORLD_WIDTH/2), round(WORLD_LENGTH/2)});
-
     player.reachableNodes = GetReachableNodes(player.base.tilePos, player.base.range);
-}
-
-void PlayerUpdate()
-{
-    EntityAnimate(&player.base);
-    EntityMove(&player.base, -1);
 
     Vector2 mouseTilePos = ScreenToTilePos(GetScreenToWorld2D(GetMousePosition(), mainCamera), true);
-
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && ListLength(player.base.path) == 0)
     {
         if (Vector2AlmostEquals(mouseTilePos, player.base.tilePos)) return;
 
-        player.reachableNodes = GetReachableNodes(player.base.tilePos, player.base.range);
         if (!ListHasVector(&player.reachableNodes, mouseTilePos)) return;
 
         ListFree(player.reachableNodes);
         player.reachableNodes = NULL;
 
         player.base.path = AStar(player.base.tilePos, mouseTilePos);
+        NextTurn();
     }
+}
 
-    if (player.base.path == NULL && player.reachableNodes == NULL)
-    {
-        if (ListLength(player.base.path) == 0) player.reachableNodes = GetReachableNodes(player.base.tilePos, player.base.range);
-    }
-
+void PlayerInit()
+{
+    EntityInit(&player.base, (Vector2){round(WORLD_WIDTH/2), round(WORLD_LENGTH/2)});
+    player.base.range = 2;
+    player.base.turnFunction = &PlayerUpdatePath;
 }
 
 void DrawReachableNodes()

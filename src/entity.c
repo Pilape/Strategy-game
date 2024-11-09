@@ -5,13 +5,50 @@
 #include "tilemap.h"
 #include "globals.h"
 #include "entity.h"
+#include "turns.h"
+
+EntityNode* EntityNodeCreate(Entity *self)
+{
+    EntityNode *newNode = malloc(sizeof(EntityNode));
+    if (newNode == NULL) perror("Function 'EntityCreate' could not allocate memory");
+    newNode->self = self;
+    newNode->next = NULL;
+
+    return newNode;
+}
+
+void EntityInsertFront(EntityNode **head, Entity *self)
+{
+    EntityNode* newNode = EntityNodeCreate(self);
+    newNode->next = *head;
+    *head = newNode;
+}
+
+EntityNode *entities = NULL;
 
 void EntityInit(Entity *self, Vector2 pos)
 {
     self->tilePos = pos;
     self->pos = TileToScreenPos(self->tilePos);
     self->health = 20;
-    self->range = 2;
+    self->range = 1;
+    self->distMoved = 0;
+
+    EntityInsertFront(&entities, self);
+}
+
+void EntitiesUpdate(EntityNode *entities)
+{
+    EntityNode *currentEntity = entities;
+
+    while (currentEntity)
+    {
+        EntityAnimate(currentEntity->self);
+        EntityMove(currentEntity->self, currentEntity->self->range);
+
+        currentEntity = currentEntity->next;
+    }
+    
 }
 
 void EntityAnimate(Entity *self)
@@ -21,13 +58,18 @@ void EntityAnimate(Entity *self)
 
 void EntityMove(Entity *self, int distance)
 {
-    static int distanceMoved = 0;
-    if (distanceMoved >= distance && distance != -1) return;
+    if (self->distMoved > distance || self->path == NULL)
+    {
+        self->distMoved = 0;
+
+        ListFree(self->path);
+        self->path = NULL;
+    }
 
     if (ListLength(self->path) > 0 && Vector2AlmostEquals(self->pos, TileToScreenPos(self->tilePos)))
     {
         self->tilePos = ListPopFront(&self->path);
-        distanceMoved++;
+        self->distMoved++;
     }
 }
 

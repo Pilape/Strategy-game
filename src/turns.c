@@ -1,23 +1,17 @@
-#include "enemy.h"
-#include "player.h"
+#include "entity.h"
+#include "turns.h"
 
-enum TURN
+EntityNode *currentEntity;
+
+void NextTurn()
 {
-    PLAYER,
-    ENEMY,
-};
-enum TURN CURRENT_TURN = PLAYER;
+    if (currentEntity == NULL) return;
 
-void EndTurn()
+    if (currentEntity->next == NULL) currentEntity = entities;
+    else currentEntity = currentEntity->next;
+}
+
+void DoTurn()
 {
-    switch (CURRENT_TURN)
-    {
-    case PLAYER:
-        /* code */
-        break;
-    
-    case ENEMY:
-
-        break;
-    }
+    (*currentEntity->self->turnFunction)(currentEntity->self);
 }

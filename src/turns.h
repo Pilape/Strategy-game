@@ -3,6 +3,9 @@
 
 #include "entity.h"
 
-void NextTurn();
+extern EntityNode *currentEntity;
+
+void NextTurn(void);
+void DoTurn(void);
 
 #endif

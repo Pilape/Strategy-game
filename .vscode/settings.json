@@ -33,6 +33,7 @@
 		"string.h": "c",
 		"astar.h": "c",
 		"entity.h": "c",
-		"enemy.h": "c"
+		"enemy.h": "c",
+		"turns.h": "c"
 	}
 }
