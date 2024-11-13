@@ -5,7 +5,7 @@
 
 struct Player
 {
-    Entity base;
+    Entity *base;
     Node *reachableNodes;
 };
 extern struct Player player;

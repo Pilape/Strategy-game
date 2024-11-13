@@ -3,7 +3,7 @@
 
 #include "entity.h"
 
-extern EntityNode *currentEntity;
+extern Entity *activeEntity;
 
 void NextTurn(void);
 void DoTurn(void);

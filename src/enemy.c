@@ -11,17 +11,12 @@
 
 void EnemyUpdatePath(Entity *self)
 {
-    self->path = AStar(self->tilePos, player.base.tilePos);
+    self->path = AStar(self->tilePos, player.base->tilePos);
     NextTurn();
 }
 
-void EnemyInit(Enemy *self)
+void EnemySpawn(Vector2 pos)
 {
-    EntityInit(&self->base, Vector2One());
-    self->base.turnFunction = &EnemyUpdatePath;
-}
-
-void EnemyDraw(Enemy *self)
-{
-    EntityDraw(&self->base);
+    Entity *newEnemy = EntitySpawn(pos);
+    newEnemy->turnFunction = &EnemyUpdatePath;
 }

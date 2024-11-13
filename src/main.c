@@ -26,17 +26,18 @@ int main()
     TexturesInit();
     MapInit();
     PlayerInit();
-    mainCamera.target = TileToScreenPos(player.base.tilePos);
+    
+    EnemySpawn(Vector2One());
+    EnemySpawn((Vector2){WORLD_LENGTH-1, WORLD_WIDTH-1});
+    EnemySpawn((Vector2){WORLD_LENGTH-1, 1});
+    EnemySpawn((Vector2){1, WORLD_WIDTH-1});
+
+    mainCamera.target = TileToScreenPos(player.base->tilePos);
     mainCamera.offset = Vector2Scale(SCREEN_SIZE, 0.5f);
     mainCamera.rotation = 0.0f;
     mainCamera.zoom = scale;
 
-    Enemy enemy = { 0 };
-    EnemyInit(&enemy);
-
-    currentEntity = entities;
-
-    NextTurn();
+    activeEntity = entities;
 
     while (!WindowShouldClose())
     {
@@ -57,10 +58,8 @@ int main()
 
             BeginMode2D(mainCamera);
                 DrawTiles();
-
-                EnemyDraw(&enemy);
-
                 PlayerDraw();
+                EntitiesDraw(entities);
             EndMode2D();
 
             DrawFPS(15, 15);

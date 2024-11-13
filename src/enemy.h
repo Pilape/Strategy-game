@@ -3,13 +3,6 @@
 
 #include "entity.h"
 
-typedef struct {
-
-    Entity base;
-
-} Enemy;
-
-void EnemyInit(Enemy *self);
-void EnemyDraw(Enemy *self);
+void EnemySpawn(Vector2 pos);
 
 #endif

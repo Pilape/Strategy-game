@@ -6,7 +6,7 @@
 #include "globals.h"
 #include "entity.h"
 #include "turns.h"
-
+/* 
 EntityNode* EntityNodeCreate(Entity *self)
 {
     EntityNode *newNode = malloc(sizeof(EntityNode));
@@ -36,24 +36,56 @@ void EntityInit(Entity *self, Vector2 pos)
 
     EntityInsertFront(&entities, self);
 }
+ */
 
-void EntitiesUpdate(EntityNode *entities)
+Entity *entities = NULL;
+
+Entity* EntityInit(Vector2 pos)
 {
-    EntityNode *currentEntity = entities;
+    Entity *newEntity = malloc(sizeof(Entity));
+    if (newEntity == NULL) perror("Could not allocate memory in function 'EntityInit()'");
 
-    while (currentEntity)
+    newEntity->distMoved = 0;
+    newEntity->health = 20;
+    newEntity->tilePos = pos;
+    newEntity->pos = TileToScreenPos(pos);
+    newEntity->range = 1;
+    newEntity->path = NULL;
+    newEntity->next = NULL;
+
+    return newEntity;
+}
+
+void EntityInsert(Entity **entities, Entity *entity)
+{
+    Entity *currentEntity = *entities;
+
+    if (*entities == NULL)
     {
-        EntityAnimate(currentEntity->self);
-        EntityMove(currentEntity->self, currentEntity->self->range);
+        entity->next = *entities;
+        *entities = entity;
+        return;
+    }
 
+    while (currentEntity->next)
+    {
         currentEntity = currentEntity->next;
     }
+    currentEntity->next = entity;
+}
+
+Entity* EntitySpawn(Vector2 pos)
+{
+    Entity *newEntity = EntityInit(pos);
     
+    EntityInsert(&entities, newEntity);
+
+    return newEntity;
 }
 
 void EntityAnimate(Entity *self)
 {
-    self->pos = Vector2Lerp(self->pos, TileToScreenPos(self->tilePos), 50 * GetFrameTime());
+    self->pos = Vector2Lerp(self->pos, TileToScreenPos(self->tilePos), 25 * GetFrameTime());
 }
 
 void EntityMove(Entity *self, int distance)
@@ -64,13 +96,28 @@ void EntityMove(Entity *self, int distance)
 
         ListFree(self->path);
         self->path = NULL;
+        //NextTurn();
     }
 
-    if (ListLength(self->path) > 0 && Vector2AlmostEquals(self->pos, TileToScreenPos(self->tilePos)))
+    if (self->path != NULL && Vector2AlmostEquals(self->pos, TileToScreenPos(self->tilePos)))
     {
         self->tilePos = ListPopFront(&self->path);
         self->distMoved++;
     }
+}
+
+void EntitiesUpdate(Entity *entities)
+{
+    Entity *currentEntity = entities;
+
+    while (currentEntity)
+    {
+        EntityAnimate(currentEntity);
+        EntityMove(currentEntity, currentEntity->range);
+
+        currentEntity = currentEntity->next;
+    }
+    
 }
 
 void EntityDraw(Entity *self)
@@ -78,4 +125,17 @@ void EntityDraw(Entity *self)
     DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
         (Rectangle){self->pos.x, self->pos.y, 64, 64},
         (Vector2){32, 48}, 0, WHITE);
+}
+
+void EntitiesDraw(Entity *entities)
+{
+    Entity *currentEntity = entities;
+
+    while (currentEntity)
+    {
+        EntityDraw(currentEntity);
+
+        currentEntity = currentEntity->next;
+    }
+    
 }

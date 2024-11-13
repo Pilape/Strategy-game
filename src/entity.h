@@ -13,23 +13,16 @@ typedef struct Entity{
     Node *path;
     void (*turnFunction)();
     int distMoved;
+    struct Entity *next;
 
 } Entity;
 
-typedef struct EntityNode {
+extern Entity *entities;
 
-    Entity *self;
-    struct EntityNode *next;
-} EntityNode;
-
-extern EntityNode *entities;
-
-void EntityInsertFront(EntityNode **head, Entity *self);
-
-void EntityInit(Entity *self, Vector2 pos);
+Entity* EntitySpawn(Vector2 pos);
 void EntityAnimate(Entity *self);
-void EntityMove(Entity *self, int distance);
-void EntitiesUpdate(EntityNode *entities);
+void EntitiesUpdate(Entity *entities);
 void EntityDraw(Entity *self);
+void EntitiesDraw(Entity *entities);
 
 #endif

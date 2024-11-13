@@ -115,19 +115,6 @@ void ListFree(Node *head)
     }
 }
 
-//PqData* PqGetData(Node *pqNode) { return (PqData*)(pqNode)->data; }
-
-/* PqNode* PqCreateData(int priority, size_t size)
-{
-    PqData *temp = malloc(sizeof(PqData));
-    if (temp == NULL) perror("Faield to allocate memory [Function: PqCreateData]");
-
-    temp->priority = priority;
-    temp->data = malloc(sizeof(size));
-
-    return temp;
-} */
-
 PqNode *PqCreateNode(Vector2 data, int priority)
 {
     PqNode *newNode = malloc(sizeof(PqNode));

@@ -12,28 +12,28 @@ struct Player player = { 0 };
 
 void PlayerUpdatePath()
 {
-    player.reachableNodes = GetReachableNodes(player.base.tilePos, player.base.range);
+    if (player.base->path == NULL) player.reachableNodes = GetReachableNodes(player.base->tilePos, player.base->range);
 
     Vector2 mouseTilePos = ScreenToTilePos(GetScreenToWorld2D(GetMousePosition(), mainCamera), true);
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && ListLength(player.base.path) == 0)
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && ListLength(player.base->path) == 0)
     {
-        if (Vector2AlmostEquals(mouseTilePos, player.base.tilePos)) return;
+        if (Vector2AlmostEquals(mouseTilePos, player.base->tilePos)) return;
 
         if (!ListHasVector(&player.reachableNodes, mouseTilePos)) return;
 
         ListFree(player.reachableNodes);
         player.reachableNodes = NULL;
 
-        player.base.path = AStar(player.base.tilePos, mouseTilePos);
+        player.base->path = AStar(player.base->tilePos, mouseTilePos);
         NextTurn();
     }
 }
 
 void PlayerInit()
 {
-    EntityInit(&player.base, (Vector2){round(WORLD_WIDTH/2), round(WORLD_LENGTH/2)});
-    player.base.range = 2;
-    player.base.turnFunction = &PlayerUpdatePath;
+    player.base = EntitySpawn((Vector2){round(WORLD_WIDTH/2), round(WORLD_LENGTH/2)});
+    player.base->range = 2;
+    player.base->turnFunction = &PlayerUpdatePath;
 }
 
 void DrawReachableNodes()
@@ -54,5 +54,5 @@ void DrawReachableNodes()
 void PlayerDraw()
 {
     DrawReachableNodes();
-    EntityDraw(&player.base);
+    EntityDraw(player.base);
 }

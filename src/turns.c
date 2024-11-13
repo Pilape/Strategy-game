@@ -1,17 +1,17 @@
 #include "entity.h"
 #include "turns.h"
 
-EntityNode *currentEntity;
+Entity *activeEntity;
 
 void NextTurn()
 {
-    if (currentEntity == NULL) return;
+    if (activeEntity == NULL) return;
 
-    if (currentEntity->next == NULL) currentEntity = entities;
-    else currentEntity = currentEntity->next;
+    if (activeEntity->next == NULL) activeEntity = entities;
+    else activeEntity = activeEntity->next;
 }
 
 void DoTurn()
 {
-    (*currentEntity->self->turnFunction)(currentEntity->self);
+    (*activeEntity->turnFunction)(activeEntity);
 }
