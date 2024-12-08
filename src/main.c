@@ -59,7 +59,7 @@ int main()
             BeginMode2D(mainCamera);
                 DrawTiles();
                 PlayerDraw();
-                EntitiesDraw(entities);
+                EntitiesDraw(EntityDrawQueue);
             EndMode2D();
 
             DrawFPS(15, 15);

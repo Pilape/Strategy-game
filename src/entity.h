@@ -19,10 +19,22 @@ typedef struct Entity{
 
 extern Entity *entities;
 
+typedef struct drawQueue
+{
+    Entity *data;
+
+    int priority;
+    struct drawQueue *next;
+
+} DrawQueue;
+
+extern DrawQueue *EntityDrawQueue;
+
 Entity* EntitySpawn(Vector2 pos);
 void EntityAnimate(Entity *self);
 void EntitiesUpdate(Entity *entities);
 void EntityDraw(Entity *self);
-void EntitiesDraw(Entity *entities);
+//void EntitiesDraw(DrawQueue *queue);
+void DrawQueueInsert(DrawQueue **queue, Entity *data, int priority);
 
 #endif

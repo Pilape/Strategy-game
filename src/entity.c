@@ -1,42 +1,15 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#include <stdio.h>
+
 #include "astar.h"
 #include "tilemap.h"
 #include "globals.h"
 #include "entity.h"
 #include "turns.h"
-/* 
-EntityNode* EntityNodeCreate(Entity *self)
-{
-    EntityNode *newNode = malloc(sizeof(EntityNode));
-    if (newNode == NULL) perror("Function 'EntityCreate' could not allocate memory");
-    newNode->self = self;
-    newNode->next = NULL;
 
-    return newNode;
-}
 
-void EntityInsertFront(EntityNode **head, Entity *self)
-{
-    EntityNode* newNode = EntityNodeCreate(self);
-    newNode->next = *head;
-    *head = newNode;
-}
-
-EntityNode *entities = NULL;
-
-void EntityInit(Entity *self, Vector2 pos)
-{
-    self->tilePos = pos;
-    self->pos = TileToScreenPos(self->tilePos);
-    self->health = 20;
-    self->range = 1;
-    self->distMoved = 0;
-
-    EntityInsertFront(&entities, self);
-}
- */
 
 Entity *entities = NULL;
 
@@ -106,6 +79,72 @@ void EntityMove(Entity *self, int distance)
     }
 }
 
+void EntityDraw(Entity *self)
+{
+    DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
+        (Rectangle){self->pos.x, self->pos.y, 64, 64},
+        (Vector2){32, 48}, 0, WHITE);
+}
+
+DrawQueue *EntityDrawQueue = NULL;
+
+void DrawQueueInsert(DrawQueue **head, Entity *data, int priority)
+{
+    DrawQueue *newNode = malloc(sizeof(DrawQueue));
+    newNode->data = data;
+    newNode->priority = priority;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
+    if ((*head)->priority > priority)
+    {
+        newNode->next = *head;
+        (*head) = newNode;
+        return;
+    }
+    DrawQueue* currentNode = *head;
+
+    while (currentNode->next != NULL && currentNode->next->priority < priority)
+    {
+        currentNode = currentNode->next;
+        // The problem
+        printf("%p \n", currentNode);
+    }
+
+    newNode->next = currentNode->next;
+    currentNode->next = newNode;
+}
+
+Entity* DrawQueuePop(DrawQueue **head)
+{
+    if (*head == NULL)
+    {
+        printf("List is empty \n");
+        return NULL;
+    }
+
+    DrawQueue *temp = *head;
+    Entity *data = temp->data;
+    *head = temp->next;
+
+    free(temp);
+    temp = NULL;
+
+    return data;
+}
+
+void EntitiesDraw(DrawQueue *queue)
+{
+    while (queue)
+    {
+        EntityDraw(DrawQueuePop(&queue));
+    }
+}
+
 void EntitiesUpdate(Entity *entities)
 {
     Entity *currentEntity = entities;
@@ -115,27 +154,7 @@ void EntitiesUpdate(Entity *entities)
         EntityAnimate(currentEntity);
         EntityMove(currentEntity, currentEntity->range);
 
+        //DrawQueueInsert(&EntityDrawQueue, currentEntity, currentEntity->pos.y);
         currentEntity = currentEntity->next;
     }
-    
-}
-
-void EntityDraw(Entity *self)
-{
-    DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
-        (Rectangle){self->pos.x, self->pos.y, 64, 64},
-        (Vector2){32, 48}, 0, WHITE);
-}
-
-void EntitiesDraw(Entity *entities)
-{
-    Entity *currentEntity = entities;
-
-    while (currentEntity)
-    {
-        EntityDraw(currentEntity);
-
-        currentEntity = currentEntity->next;
-    }
-    
 }
