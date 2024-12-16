@@ -7,7 +7,8 @@
 #define WORLD_LENGTH 16
 
 enum TILE_ID {
-    FLOOR,
+    FLOOR_BLACK,
+    FLOOR_WHITE,
     PIT,
 };
 

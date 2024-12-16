@@ -83,7 +83,7 @@ void EntityMove(Entity *self, int distance)
 
 void EntityDraw(Entity *self)
 {
-    DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
+    DrawTexturePro(atlasTexture, (Rectangle){0, 0, 64, 64},
         (Rectangle){self->sprite.screenPos.x, self->sprite.screenPos.y, 64, 64},
         (Vector2){32, 48}, 0, WHITE);
 }
@@ -149,9 +149,9 @@ void DrawQueueDraw(Sprite drawQueue[], size_t queueLen)
     {
         Sprite self = drawQueue[i];
 
-        DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
-            (Rectangle){self.screenPos.x, self.screenPos.y, 64, 64},
-            (Vector2){32, 48}, 0, WHITE);
+        DrawTexturePro(atlasTexture, (Rectangle){0, 16, 16, 16},
+            (Rectangle){self.screenPos.x, self.screenPos.y, 16, 16},
+            (Vector2){8, 14}, 0, WHITE);
     }
 }
 

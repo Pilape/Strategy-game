@@ -14,6 +14,8 @@
 
 Camera2D mainCamera = { 0 };
 
+Texture2D atlasTexture;
+
 int main()
 {
     // Init
@@ -24,7 +26,7 @@ int main()
     InitWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, "AAAAA game");
     SetWindowMinSize(950, 500);
 
-    TexturesInit();
+    atlasTexture = LoadTexture("resources/atlas.png");
     MapInit();
     PlayerInit();
     
@@ -52,7 +54,7 @@ int main()
         }
 
         scale = MIN(GetScreenWidth()/SCREEN_SIZE.x, GetScreenHeight()/SCREEN_SIZE.y);
-        mainCamera.zoom = scale;
+        mainCamera.zoom = scale * 2;
         mainCamera.offset = Vector2Scale((Vector2){GetScreenWidth(), GetScreenHeight()}, 0.5f);
 
         const size_t drawQueueLen = GetEntityCount(entities);

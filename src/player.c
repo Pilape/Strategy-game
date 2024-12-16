@@ -43,8 +43,8 @@ void DrawReachableNodes()
     {
         Vector2 screenPos = TileToScreenPos(currentNode->data);
 
-        DrawTexturePro(Textures.floorTiles, (Rectangle){128, 0, 64, 64},
-            (Rectangle){screenPos.x, screenPos.y, 64, 64},
+        DrawTexturePro(atlasTexture, (Rectangle){32, 0, 16, 16},
+            (Rectangle){screenPos.x, screenPos.y, 16, 16},
             Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
         
         currentNode = currentNode->next;
@@ -54,5 +54,4 @@ void DrawReachableNodes()
 void PlayerDraw()
 {
     DrawReachableNodes();
-    EntityDraw(player.base);
 }

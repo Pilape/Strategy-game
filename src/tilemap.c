@@ -3,12 +3,21 @@
 #include <raymath.h>
 #include "globals.h"
 
-const Vector2 TILE_SIZE = {64, 32};
+const Vector2 TILE_SIZE = {16, 8};
 
 int Map[WORLD_WIDTH][WORLD_LENGTH];
 
 void MapInit()
 {
+    for (int x=1; x<WORLD_WIDTH; x++)
+    {
+        for (int z=1; z<WORLD_LENGTH; z++)
+        {
+            if ((x+z) % 2 == 0) Map[x][z] = FLOOR_WHITE;
+            else Map[x][z] = FLOOR_BLACK;
+        }
+    }
+
     Map[11][12] = PIT; Map[12][12] = PIT;
     Map[11][11] = PIT; Map[12][11] = PIT;
 
@@ -77,10 +86,10 @@ int IsTraversible(Vector2 pos)
     return IsInBounds(pos) && Map[(int)pos.x][(int)pos.y] != PIT;
 }
 
-Vector2 floorTileTextureSize = {64, 64};
-
 void DrawTiles()
 {
+    Vector2 floorTileTextureSize = {16, 16};
+
     for (int x=1; x<WORLD_WIDTH; x++)
     {
         for (int y=1; y<WORLD_LENGTH; y++)
@@ -91,17 +100,20 @@ void DrawTiles()
 
             switch (Map[x][y])
             {
-            case FLOOR:
+            case FLOOR_BLACK:
                 tileTextureSource.x = 0;
                 break;
-            case PIT:
+            case FLOOR_WHITE:
                 tileTextureSource.x = floorTileTextureSize.x;
+                break;
+            case PIT:
+                tileTextureSource.x = floorTileTextureSize.x*3;
                 break;
             default:
                 tileTextureSource.x = 0;
             }
 
-            DrawTexturePro(Textures.floorTiles, tileTextureSource,
+            DrawTexturePro(atlasTexture, tileTextureSource,
                 (Rectangle){screenPos.x, screenPos.y, floorTileTextureSize.x, floorTileTextureSize.y},
                 Vector2Scale(TILE_SIZE, 0.5f), 0, WHITE);
         }
