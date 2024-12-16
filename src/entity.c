@@ -21,10 +21,12 @@ Entity* EntityInit(Vector2 pos)
     newEntity->distMoved = 0;
     newEntity->health = 20;
     newEntity->tilePos = pos;
-    newEntity->pos = TileToScreenPos(pos);
     newEntity->range = 1;
     newEntity->path = NULL;
     newEntity->next = NULL;
+
+    newEntity->sprite.screenPos = TileToScreenPos(pos);
+    newEntity->sprite.atlasPos = Vector2Zero();
 
     return newEntity;
 }
@@ -58,7 +60,7 @@ Entity* EntitySpawn(Vector2 pos)
 
 void EntityAnimate(Entity *self)
 {
-    self->pos = Vector2Lerp(self->pos, TileToScreenPos(self->tilePos), 25 * GetFrameTime());
+    self->sprite.screenPos = Vector2Lerp(self->sprite.screenPos, TileToScreenPos(self->tilePos), 25 * GetFrameTime());
 }
 
 void EntityMove(Entity *self, int distance)
@@ -72,7 +74,7 @@ void EntityMove(Entity *self, int distance)
         //NextTurn();
     }
 
-    if (self->path != NULL && Vector2AlmostEquals(self->pos, TileToScreenPos(self->tilePos)))
+    if (self->path != NULL && Vector2AlmostEquals(self->sprite.screenPos, TileToScreenPos(self->tilePos)))
     {
         self->tilePos = ListPopFront(&self->path);
         self->distMoved++;
@@ -82,66 +84,83 @@ void EntityMove(Entity *self, int distance)
 void EntityDraw(Entity *self)
 {
     DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
-        (Rectangle){self->pos.x, self->pos.y, 64, 64},
+        (Rectangle){self->sprite.screenPos.x, self->sprite.screenPos.y, 64, 64},
         (Vector2){32, 48}, 0, WHITE);
 }
 
-DrawQueue *EntityDrawQueue = NULL;
-
-void DrawQueueInsert(DrawQueue **head, Entity *data, int priority)
+int GetEntityCount(Entity* entities)
 {
-    DrawQueue *newNode = malloc(sizeof(DrawQueue));
-    newNode->data = data;
-    newNode->priority = priority;
-    newNode->next = NULL;
+    int count = 0;
 
-    if (*head == NULL) {
-        *head = newNode;
-        return;
-    }
-
-    if ((*head)->priority > priority)
+    Entity* temp = entities;
+    while (temp)
     {
-        newNode->next = *head;
-        (*head) = newNode;
-        return;
+        count++;
+        temp = temp->next;
     }
-    DrawQueue* currentNode = *head;
-
-    while (currentNode->next != NULL && currentNode->next->priority < priority)
-    {
-        currentNode = currentNode->next;
-        // The problem
-        printf("%p \n", currentNode);
-    }
-
-    newNode->next = currentNode->next;
-    currentNode->next = newNode;
+    
+    return count;
 }
 
-Entity* DrawQueuePop(DrawQueue **head)
+void DrawQueueInit(Entity* entities, Sprite drawQueue[])
 {
-    if (*head == NULL)
+    int index = 0;
+    Entity* currentEntity = entities;
+    while (currentEntity)
     {
-        printf("List is empty \n");
-        return NULL;
+        drawQueue[index] = currentEntity->sprite;
+
+        currentEntity = currentEntity->next;
+        index++;
     }
-
-    DrawQueue *temp = *head;
-    Entity *data = temp->data;
-    *head = temp->next;
-
-    free(temp);
-    temp = NULL;
-
-    return data;
 }
 
-void EntitiesDraw(DrawQueue *queue)
+void DrawQueueSwap(Sprite* xp, Sprite* yp){
+    Sprite temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+
+void DrawQueueSort(Sprite drawQueue[], size_t queueLen)
 {
-    while (queue)
+    // Bubble sort (stolen from web)
+    int i, j;
+    bool swapped;
+    for (i = 0; i < queueLen - 1; i++) {
+        swapped = false;
+        for (j = 0; j < queueLen - i - 1; j++) {
+            if (drawQueue[j].screenPos.y > drawQueue[j + 1].screenPos.y) {
+                DrawQueueSwap(&drawQueue[j], &drawQueue[j + 1]);
+                swapped = true;
+            }
+        }
+
+        // If no two elements were swapped by inner loop,
+        // then break
+        if (swapped == false)
+            break;
+    }
+}
+
+void DrawQueueDraw(Sprite drawQueue[], size_t queueLen)
+{
+    for (int i=0; i<queueLen; i++)
     {
-        EntityDraw(DrawQueuePop(&queue));
+        Sprite self = drawQueue[i];
+
+        DrawTexturePro(Textures.player, (Rectangle){0, 0, 64, 64},
+            (Rectangle){self.screenPos.x, self.screenPos.y, 64, 64},
+            (Vector2){32, 48}, 0, WHITE);
+    }
+}
+
+void DrawQueuePrint(Sprite drawQueue[], size_t queueLen)
+{
+    for (int i=0; i<queueLen; i++)
+    {
+        Sprite self = drawQueue[i];
+        printf("Sprite: {ScreenPos: [x: %f, y: %f], AtlasPos: [x: %d, y: %d]} \n", self.screenPos.x, self.screenPos.y, (int)self.atlasPos.x, (int)self.atlasPos.y);
     }
 }
 
@@ -154,7 +173,6 @@ void EntitiesUpdate(Entity *entities)
         EntityAnimate(currentEntity);
         EntityMove(currentEntity, currentEntity->range);
 
-        //DrawQueueInsert(&EntityDrawQueue, currentEntity, currentEntity->pos.y);
         currentEntity = currentEntity->next;
     }
 }

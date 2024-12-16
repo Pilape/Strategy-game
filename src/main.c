@@ -16,6 +16,7 @@ Camera2D mainCamera = { 0 };
 
 int main()
 {
+    // Init
     int scale = 1;
     const Vector2 SCREEN_SIZE = {800, 450};
     
@@ -41,6 +42,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        // Update
         EntitiesUpdate(entities);
         DoTurn();
 
@@ -53,13 +55,19 @@ int main()
         mainCamera.zoom = scale;
         mainCamera.offset = Vector2Scale((Vector2){GetScreenWidth(), GetScreenHeight()}, 0.5f);
 
+        const size_t drawQueueLen = GetEntityCount(entities);
+        Sprite drawQueue[drawQueueLen];
+        DrawQueueInit(entities, drawQueue);
+        DrawQueueSort(drawQueue, drawQueueLen);
+
+        // Draw
         BeginDrawing();
             ClearBackground(BLACK);
 
             BeginMode2D(mainCamera);
                 DrawTiles();
                 PlayerDraw();
-                EntitiesDraw(EntityDrawQueue);
+                DrawQueueDraw(drawQueue, drawQueueLen);
             EndMode2D();
 
             DrawFPS(15, 15);

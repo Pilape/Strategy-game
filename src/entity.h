@@ -4,9 +4,15 @@
 #include <raylib.h>
 #include "astar.h"
 
-typedef struct Entity{
+typedef struct {
 
-    Vector2 pos;
+    Vector2 screenPos;
+    Vector2 atlasPos;
+
+} Sprite;
+
+typedef struct Entity {
+
     Vector2 tilePos;
     int health;
     int range;
@@ -15,26 +21,21 @@ typedef struct Entity{
     int distMoved;
     struct Entity *next;
 
+    Sprite sprite;
+
 } Entity;
 
 extern Entity *entities;
-
-typedef struct drawQueue
-{
-    Entity *data;
-
-    int priority;
-    struct drawQueue *next;
-
-} DrawQueue;
-
-extern DrawQueue *EntityDrawQueue;
 
 Entity* EntitySpawn(Vector2 pos);
 void EntityAnimate(Entity *self);
 void EntitiesUpdate(Entity *entities);
 void EntityDraw(Entity *self);
-//void EntitiesDraw(DrawQueue *queue);
-void DrawQueueInsert(DrawQueue **queue, Entity *data, int priority);
+int GetEntityCount(Entity* entities);
+
+void DrawQueueInit(Entity* entities, Sprite drawQueue[]);
+void DrawQueueSort(Sprite drawQueue[], size_t queueLen);
+void DrawQueuePrint(Sprite drawQueue[], size_t queueLen);
+void DrawQueueDraw(Sprite drawQueue[], size_t queueLen);
 
 #endif

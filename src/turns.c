@@ -13,5 +13,6 @@ void NextTurn()
 
 void DoTurn()
 {
+    if (activeEntity == NULL || activeEntity->turnFunction == NULL) return;
     (*activeEntity->turnFunction)(activeEntity);
 }
